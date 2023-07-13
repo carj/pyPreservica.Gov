@@ -88,7 +88,7 @@ class PreservicaGov:
             logger.info(f"No configuration (credentials.properties) found")
             logger.info(f"An empty configuration file has been created for you")
             config = configparser.RawConfigParser(interpolation=None)
-            config['credentials'] = {'username': '', 'password': '', 'tenant': '', 'server': ''}
+            config['credentials'] = {'username': '', 'password': '',  'server': ''}
             config['Modern.Gov'] = {'security.tag': '', 'site_name': '', 'parent.folder': '',
                                     'committee.FromDate': '01/01/1980', 'committee.ToDate': '01/01/2024'}
 

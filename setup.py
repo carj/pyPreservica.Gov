@@ -22,14 +22,14 @@ PKG = "pyPreservicaGov"
 # 'setup.py publish' shortcut.
 if sys.argv[-1] == 'publish':
     os.system('python setup.py bdist_wheel')
-#    os.system('twine upload dist/*')
+    os.system('twine upload dist/*')
     sys.exit()
 
 
 # This call to setup() does all the work
 setup(
     name=PKG,
-    version="0.0.2",
+    version="0.0.5",
     description="Python Library For Harvesting Modern.Gov Records into Preservica for Long Term Preservation",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -37,7 +37,7 @@ setup(
     author="James Carr",
     author_email="drjamescarr@gmail.com",
     include_package_data=True,
-    package_data={'pyPreservicaGov': ['images/*.png']},
+    package_data={'pyPreservicaGov': ['images/*.png', 'schema/*.xml', 'schema/*.xsd', 'schema/*.xsl']},
     license="Apache License 2.0",
     packages=["pyPreservicaGov"],
     classifiers=[
