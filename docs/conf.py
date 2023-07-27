@@ -29,5 +29,5 @@ pygments_style = 'default'
 
 source_suffix = ".rst"
 
-project = u"pyPreservica"
+project = u"pyPreservica.Gov"
 author = u"James Carr"

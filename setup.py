@@ -33,7 +33,7 @@ setup(
     description="Python Library For Harvesting Modern.Gov Records into Preservica for Long Term Preservation",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://pyPreservicaGov.readthedocs.io/",
+    url="https://pypreservicagov.readthedocs.io/",
     author="James Carr",
     author_email="drjamescarr@gmail.com",
     include_package_data=True,
@@ -53,7 +53,7 @@ setup(
     keywords='Preservica API Preservation',
     install_requires=["pyPreservica", "python-dateutil", "bs4", "pathvalidate"],
     project_urls={
-        'Documentation': 'https://pyPreservicaGov.readthedocs.io',
+        'Documentation': 'https://pypreservicagov.readthedocs.io/',
         'Source': 'https://github.com/carj/pyPreservica.Gov',
         'Discussion Forum': 'https://groups.google.com/g/pyPreservicaGov',
     }
