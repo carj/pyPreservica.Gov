@@ -1,7 +1,7 @@
 import sphinx_rtd_theme
 import os
 import sys
-from pyPreservica import __version__
+from pyPreservicaGov import __version__
 
 sys.path.insert(0, os.path.abspath('../pyPreservica.Gov/'))
 
