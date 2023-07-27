@@ -29,7 +29,7 @@ if sys.argv[-1] == 'publish':
 # This call to setup() does all the work
 setup(
     name=PKG,
-    version="0.0.5",
+    version="0.1.0",
     description="Python Library For Harvesting Modern.Gov Records into Preservica for Long Term Preservation",
     long_description=README,
     long_description_content_type="text/markdown",

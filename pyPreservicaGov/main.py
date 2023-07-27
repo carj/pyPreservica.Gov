@@ -50,8 +50,12 @@ logger.addHandler(filehandler)
 
 
 class PreservicaGov:
-    def __init__(self):
+    def __init__(self, callback=None, stopCallback=None):
+        self.callback = callback
+        self.stopCallback = stopCallback
         if pathlib.Path('credentials.properties').is_file():
+            if callback is not None:
+                callback(f"Loading configuration from credentials.properties")
             logger.info(f"Loading configuration from credentials.properties")
             config = configparser.ConfigParser(interpolation=configparser.Interpolation())
             config.read('credentials.properties', encoding='utf-8')
@@ -60,11 +64,17 @@ class PreservicaGov:
             self.client = EntityAPI()
             self.upload = UploadAPI()
             self.folder = self.client.folder(self.parent_folder)
+            if callback is not None:
+                callback(f"Found Parent Folder {self.folder.title}")
             logger.info(f"Found Parent Folder {self.folder.title}")
+            if callback is not None:
+                callback(f"Found Security Tag {self.security_tag}")
             logger.info(f"Found Security Tag {self.security_tag}")
             self.site_name = config['Modern.Gov'].get('site_name', '')
             if not self.site_name.endswith("/"):
                 self.site_name = f"{self.site_name}/"
+            if callback is not None:
+                callback(f"Modern.Gov Site {self.site_name}")
             logger.info(f"Modern.Gov Site {self.site_name}")
 
             # read the dates from the properties file
@@ -98,6 +108,8 @@ class PreservicaGov:
 
     def harvest(self):
         if self.site_name:
+            if self.callback is not None:
+                self.callback(f"Ingesting content from {self.site_name} into folder {self.folder.title}")
             logger.info(f"Ingesting content from {self.site_name} into folder {self.folder.title}")
             self.__main()
 
@@ -106,6 +118,8 @@ class PreservicaGov:
         params = {"lmeetingid": str(meeting_id)}
         response = requests.get(f"{domain_url}/mgwebservice.asmx/GetMeeting", params=params, verify=True)
         if response.status_code != 200:
+            if self.callback is not None:
+                self.callback(f"Failed to fetch metadata for {response.url}")
             logger.error(f"Failed to fetch metadata for {response.url}")
             logger.error(response.content.decode("utf-8"))
             return
@@ -125,6 +139,8 @@ class PreservicaGov:
                 meeting_title = f"Meeting {d.date()}"
 
                 meeting_location = meeting_object.find(".//{*}meetinglocation").text
+                if self.callback is not None:
+                    self.callback(f"Creating Meeting: {meeting_title}")
                 logger.info(f"Creating Meeting: {meeting_title}")
                 meeting_folder = self.client.create_folder(meeting_title, meeting_location, self.security_tag,
                                                            committee_folder.reference)
@@ -132,6 +148,8 @@ class PreservicaGov:
                 self.client.add_thumbnail(meeting_folder, self.temp_meeting_image.name)
             else:
                 meeting_folder = existing_meeting.pop()
+                if self.callback is not None:
+                    self.callback(f"Found Existing Meeting: {meeting_folder.title}")
                 logger.info(f"Found Existing Meeting: {meeting_folder.title}")
             meeting_folder = self.client.folder(meeting_folder.reference)
             meeting_metadata = self.client.metadata_for_entity(meeting_folder, f"{MGOV_NS}meeting")
@@ -157,6 +175,8 @@ class PreservicaGov:
                         title = item.contents[0]['title']
                         title = title.replace("Link to", "")
                         file_name = sanitize_filename(title).strip()
+                        if self.callback is not None:
+                            self.callback(f"Adding Document: {file_name}")
                         logger.info(f"Adding Document: {file_name}")
                         with open(f'{file_name}.pdf', 'wb') as fd:
                             for chunk in pdf_response.iter_content(1024):
@@ -192,8 +212,12 @@ class PreservicaGov:
                         if url:
                             existing_docs = self.client.identifier(f"{domain_url} attachment", url)
                             if len(existing_docs) > 0:
+                                if self.callback is not None:
+                                    self.callback(f"Found Existing Document {title} skipping...")
                                 logger.info(f"Found Existing Document {title} skipping...")
                             if len(existing_docs) == 0:
+                                if self.callback is not None:
+                                    self.callback(f"Adding Document: {title}")
                                 logger.info(f"Adding Document: {title}")
                                 pdf_response = requests.get(url, stream=True, verify=True)
                                 file_name = sanitize_filename(title).strip()
@@ -227,6 +251,11 @@ class PreservicaGov:
             logger.info(f"Found {committees_count} Committees")
             committees = committees_object.findall(".//committee")
             for committee in committees:
+
+                if self.stopCallback is not None:
+                    if self.stopCallback():
+                        break
+
                 try:
                     committee_id = int(committee.find(".//committeeid").text)
                     title = committee.find(".//committeetitle").text
@@ -234,9 +263,14 @@ class PreservicaGov:
                         category = committee.find(".//committeecategory").text
                     else:
                         category = ""
+
+                    if self.callback is not None:
+                        self.callback(f"Found Committee {title} with id {str(committee_id)}")
                     logger.info(f"Found Committee {title} with id {str(committee_id)}")
                     existing_committee = self.client.identifier(self.committee_identifier, str(committee_id))
                     if len(existing_committee) == 0:
+                        if self.callback is not None:
+                            self.callback(f"Creating New Committee: {title}")
                         logger.info(f"Creating New Committee: {title}")
                         committee_folder = self.client.create_folder(title, category, self.security_tag,
                                                                      self.parent_folder)
@@ -244,11 +278,15 @@ class PreservicaGov:
                         self.client.add_thumbnail(committee_folder, self.committee_image.name)
                     else:
                         committee_folder = existing_committee.pop()
+                        if self.callback is not None:
+                            self.callback(f"Using Existing Committee: {title}")
                         logger.info(f"Using Existing Committee: {title}")
                     committee_folder = self.client.folder(committee_folder.reference)
                     params = {"lCommitteeId": committee_id, "sFromDate": sFromDate, "sToDate": sToDate}
                     response = requests.get(f"{domain_url}/mgwebservice.asmx/GetMeetings", params=params, verify=True)
                     if response.status_code == 200:
+                        if self.callback is not None:
+                            self.callback(f"Found List of Committee Meetings")
                         logger.info(f"Found List of Committee Meetings")
                         get_meetings_response = response.content.decode("utf-8")
                         get_meetings_response = get_meetings_response.replace("<getmeetings>",
@@ -264,12 +302,21 @@ class PreservicaGov:
 
                         if meetings_object.find(".//{*}meetingscount") is not None:
                             meeting_count = int(meetings_object.find(".//{*}meetingscount").text.strip())
+                            if self.callback is not None:
+                                self.callback(f"Found {meeting_count} Meetings in Committee {title}")
                             logger.info(f"Found {meeting_count} Meetings in Committee {title}")
 
                         meetings = meetings_object.findall(".//{*}meeting")
                         for meeting in meetings:
+
+                            if self.stopCallback is not None:
+                                if self.stopCallback():
+                                    break
+
                             meeting_id = int(meeting.find(".//{*}meetingid").text)
                             meeting_date = meeting.find(".//{*}meetingdate").text
+                            if self.callback is not None:
+                                self.callback(f"Adding Meeting {meeting_id}")
                             logger.info(f"Adding Meeting {meeting_id}")
                             self.__add_meeting(meeting_id, meeting_date, committee_folder, committee_id)
 

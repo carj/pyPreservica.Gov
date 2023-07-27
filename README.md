@@ -54,7 +54,7 @@ The package is available as open source under the terms of the Apache License 2.
 
 pyPreservica.Gov is available from the Python Package Index (PyPI)
 
-https://pypi.org/project/pyPreservica.Gov/
+https://pypi.org/project/pyPreservicaGov/
 
 To install pyPreservica.Gov, simply run this simple command in your terminal of choice:
 
