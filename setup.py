@@ -50,7 +50,7 @@ setup(
         "Operating System :: OS Independent",
         "Topic :: System :: Archiving",
     ],
-    keywords='Preservica API Preservation',
+    keywords='Preservica API Preservation Modern.Gov Civica',
     install_requires=["pyPreservica", "python-dateutil", "bs4", "pathvalidate"],
     project_urls={
         'Documentation': 'https://pypreservicagov.readthedocs.io/',
