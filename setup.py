@@ -29,7 +29,7 @@ if sys.argv[-1] == 'publish':
 # This call to setup() does all the work
 setup(
     name=PKG,
-    version="0.1.0",
+    version="0.1.1",
     description="Python Library For Harvesting Modern.Gov Records into Preservica for Long Term Preservation",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -51,7 +51,7 @@ setup(
         "Topic :: System :: Archiving",
     ],
     keywords='Preservica API Preservation Modern.Gov Civica',
-    install_requires=["pyPreservica", "python-dateutil", "bs4", "pathvalidate"],
+    install_requires=["pyPreservica", "python-dateutil", "bs4", "pathvalidate", "readchar"],
     project_urls={
         'Documentation': 'https://pypreservicagov.readthedocs.io/',
         'Source': 'https://github.com/carj/pyPreservica.Gov',

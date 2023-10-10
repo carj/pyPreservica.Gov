@@ -84,17 +84,17 @@ class Schema:
         has_attachment_xml = False
         for document in client.xml_documents():
             if document['SchemaUri'] == "http://www.preservica.com/customindex/v1":
-                if document['Name'] == "Modern.Gov Committee Index":
+                if str(document['Name']).lower() == "Modern.Gov Committee Index".lower():
                     has_committee_xml = True
                     if callback is not None:
                         callback(f"Found Existing Modern.Gov Committee Index")
                     logger.info(f"Found Existing Modern.Gov Committee Index")
-                if document['Name'] == "Modern.Gov Meeting Index":
+                if str(document['Name']).lower() == "Modern.Gov Meeting Index".lower():
                     has_meeting_xml = True
                     if callback is not None:
                         callback(f"Found ExistingModern.Gov Meeting Index")
                     logger.info(f"Found ExistingModern.Gov Meeting Index")
-                if document['Name'] == "Modern.Gov Attachment Index":
+                if str(document['Name']).lower() == "Modern.Gov Attachment Index".lower():
                     has_attachment_xml = True
                     if callback is not None:
                         callback(f"Found Existing Modern.Gov Attachment Index")
