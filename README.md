@@ -49,6 +49,13 @@ to start the harvest process.
 
 The package is available as open source under the terms of the Apache License 2.0
 
+## Support 
+
+pyPreservica.Gov is 3rd party open source client and is not affiliated or supported by Preservica Ltd.
+There is no support for use of the library by Preservica Ltd.
+Bug reports can be raised directly on GitHub.
+
+Users of pyPreservica.Gov should make sure they are licensed to use the Preservica REST APIs. 
 
 ## Installation
 
