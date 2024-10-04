@@ -27,9 +27,11 @@ Meeting Records into Preservica for Long Term Preservation.
 pyPreservica.Gov is a Python Module which allows Preservica users to automatically harvest public records from the
 Civica Modern.Gov Content Management system directly into a Preservica Long Term Digital Preservation platform
 
-pyPreservica.Gov is an open source 3rd party application and is not affiliated with `Preservica Ltd <https://preservica.com/>`_
+pyPreservica.Gov is 3rd party open source client and is not affiliated or supported by `Preservica Ltd <https://preservica.com/>`_. 
+There is no support for use of the library by Preservica Ltd. Bug reports can be raised directly on GitHub.
 
-There is no support for use of the library by Preservica Ltd. For support see :ref:`Support <Support>`
+Users of pyPreservica.Gov should make sure they are licensed to use the Preservica REST APIs.
+
 
 -------------------
 
