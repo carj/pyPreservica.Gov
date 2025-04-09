@@ -66,7 +66,7 @@ https://pypi.org/project/pyPreservicaGov/
 To install pyPreservica.Gov, simply run this simple command in your terminal of choice:
 
 
-    $ pip install pyPreservica.Gov
+    $ pip install pyPreservicaGov
 
 
 
